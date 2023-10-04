@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::798234419462:role/eksctl-kubesight-cilium-nodegroup-NodeInstanceRole-1N336S4K91NVW
+      username: system:node:{{EC2PrivateDNSName}}
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::798234419462:role/eksctl-kubesight-cilium-nodegroup-NodeInstanceRole-BNQPIGD6SS15
+      username: system:node:{{EC2PrivateDNSName}}
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::798234419462:role/eksctl-kubesight-cilium-nodegroup-NodeInstanceRole-MR43QTWA7Z8U
+      username: system:node:{{EC2PrivateDNSName}}
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system

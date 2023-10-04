@@ -1,0 +1,31 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: kubesight-aws-cni
+  region: us-west-2
+  version: "1.27"
+  tags:
+    karpenter.sh/discovery: kubesight-aws-cni
+iam:
+  withOIDC: true
+managedNodeGroups:
+  - name: kubesight-aws-spot
+    minSize: 1
+    desiredCapacity: 2
+    ssh:
+      allow: true
+      publicKeyName: g3-west-test-public
+      publicKeyPath: ./g3-west-test-public.pem
+    instanceTypes:
+      - c3.large
+      - c4.large
+    spot: true
+  - name: kubesight-aws-ondemand
+    spot: true
+  - name: on-demand
+    desiredCapacity: 2
+    minSize: 1
+    instanceTypes:
+      - c3.large
+      - c4.large

@@ -1,0 +1,32 @@
+
+#####*************####### EKS VPC CNI ****************************************************************
+
+eksctl create cluster -f config/vpc-cni.yaml
+
+#####*************####### EKS CILIUM ****************************************************************
+eksctl create cluster -f config/cilium.yaml
+kubectl delete -f config/aws-k8s-cni.yaml
+helm repo add cilium https://helm.cilium.io/
+
+helm install cilium cilium/cilium --version 1.14.2 \
+  --namespace kube-system
+
+
+#####*************####### KOPS CLUSTER ****************************************************************
+aws route53 create-hosted-zone --name kops.sgvidyaseva.in --caller-reference $(uuidgen) | jq .DelegationSet.NameServers
+
+aws s3api create-bucket \
+    --bucket kops-hackathon-kubesight-cluster \
+    --region us-west-2 \
+    --create-bucket-configuration LocationConstraint=us-west-2
+
+export NAME=kops.sgvidyaseva.in
+export KOPS_STATE_STORE=s3://kops-hackathon-kubesight-cluster
+
+kops create cluster \
+  --node-count 3 \
+  --zones "us-west-2a,us-west-2b,us-west-2c" \
+  --network-cidr "192.168.0.0/24" \
+  --networking kube-router \
+  --name kops.sgvidyaseva.in 
+

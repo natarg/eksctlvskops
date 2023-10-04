@@ -1,0 +1,11 @@
+{
+    "aws": [
+        {
+            "athenaBucketName": "s3://aws-athena-query-results-kubesight-aws-cni",
+            "athenaRegion": "us-west-2",
+            "athenaDatabase": "athenacurcfn_aws_cni_cost",
+            "athenaTable": "aws_cni_cost",
+            "projectID": "798234419462"
+        }
+    ]
+}

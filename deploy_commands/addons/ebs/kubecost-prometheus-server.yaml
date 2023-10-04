@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    meta.helm.sh/release-name: kubecost
+    meta.helm.sh/release-namespace: kubecost
+    volume.beta.kubernetes.io/storage-provisioner: ebs.csi.aws.com
+    volume.kubernetes.io/selected-node: ip-192-168-39-228.us-west-2.compute.internal
+    volume.kubernetes.io/storage-provisioner: ebs.csi.aws.com
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: prometheus
+    app.kubernetes.io/managed-by: Helm
+    chart: prometheus-11.0.2
+    component: server
+    heritage: Helm
+    release: kubecost
+  name: kubecost-prometheus-server
+  namespace: kubecost
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 32Gi
+  storageClassName: gp3
+  volumeMode: Filesystem

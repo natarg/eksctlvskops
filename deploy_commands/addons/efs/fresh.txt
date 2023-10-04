@@ -1,0 +1,23 @@
+export cluster_name=kubesight-aws-cni
+export role_name="${cluster_name}_eks_efs_csi_driverrole"
+
+eksctl create iamserviceaccount \
+    --name efs-csi-controller-sa \
+    --namespace kube-system \
+    --cluster $cluster_name \
+    --role-name $role_name \
+    --role-only \
+		--region us-west-2 \
+    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy \
+    --approve
+
+##After this edit the trust relationship to this: It is a manual step 
+system:serviceaccount:kube-system:efs-csi-*
+
+TRUST_POLICY=$(aws iam get-role --role-name $role_name --query 'Role.AssumeRolePolicyDocument' | \
+    sed -e 's/efs-csi-controller-sa/efs-csi-*/' -e 's/StringEquals/StringLike/')
+
+aws iam update-assume-role-policy --role-name $role_name --policy-document "$TRUST_POLICY"
+
+eksctl create addon --name
+aws-efs-csi-driver --cluster kubesight-aws-cni --service-account-role-arn arn:aws:iam::798234419462:role/kubesight-aws-cni-amazoneks_eks_csi_driverrole --region us-west-2 --force
